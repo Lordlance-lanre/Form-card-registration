@@ -27,33 +27,34 @@
 				<form @submit.prevent="showForm" v-if="!isShowing">
 					<div class="container flex justify-center">
 						<label class="card absolute mt-40 ">CARDHOLDER NAME</label>
-						<input type="text" placeholder=" e.g. Jane Appleseed" class="mt-48 border-2 rounded border-slate-300 w-10/12 py-1"  v-model="cardName">
+						<input type="text" placeholder=" e.g. Jane Appleseed" class="mt-48 px-3 border-2 rounded border-slate-300 w-10/12 py-1"  v-model="cardName">
 						
 					</div>
 					<div class="container flex justify-center">
 						<label class="cards absolute mt-4">CARD NUMBER</label>
-						<input type="number" placeholder=" e.g. 1234 5678 9123 0000" class="mt-11 border-2 rounded border-slate-300 w-10/12 py-1" v-model="cardNumber">
+						<input type="number" placeholder=" e.g. 1234 5678 9123 0000" class="mt-11 border-2 rounded border-slate-300 px-3  w-10/12 py-1" v-model="cardNumber">
 						
 					</div>
 					<div class="grid grid-cols-3">
 						<div class="mt-4 ml-9">
 							<label >EXP. DATE</label>
-							<input type="number" placeholder="MM" class="border-2 rounded border-slate-300 px-1 h-8 w-12" v-model="date">
+							<input type="number" placeholder="MM" class="border-2 rounded border-slate-300 px-1 h-8 w-14" v-model="date">
 							
 						</div>
 						<div class="mt-4 mx-5">
 							<label >(MM/YY)</label>
-							<input type="text" placeholder="YY" class="border-2 rounded border-slate-300 px-1 h-8 w-12" v-model="year">
+							<input type="text" placeholder="YY" class="border-2 rounded border-slate-300 px-1 h-8 w-14" v-model="year">
 							
 						</div>
 						<div class="mt-4">
 							<label >CVC</label>
-							<input type="number" placeholder="e.g. 123" class="border-2 rounded border-slate-300 h-9 w-24 absolute mt-6 px-1 -mx-10" v-model="cardValue" >
+							<input type="number" placeholder="e.g. 123" class="border-2 rounded border-slate-300 h-9 w-28 absolute mt-6 px-1 -mx-10" v-model="cardValue" >
 						</div>
 					</div>
-					<button class="block mx-auto bg-indigo-900 mt-7 text-sm text-white py-2 px-32 rounded">
+					<button class="block mx-auto bg-indigo-900 mt-7 text-sm text-white py-2 text-lg font-bold tracking-wide w-[380px] rounded">
 						Confirm
 					</button>
+					<p>{{errors}}</p>
 				</form>
 			</div>
 		</div>
@@ -121,7 +122,7 @@
 									</div>
 								</div>
 								<div>
-									<button class="pin bg-indigo-900 block mt-5 py-2 text-white px-32  rounded text-sm">Continue</button>
+									<button class="pin bg-indigo-900 block mt-5 py-2 text-white px-32  rounded font-bold text-lg w-[344px] text-sm">Continue</button>
 								</div>
 							</form>
 						</div>
@@ -130,6 +131,59 @@
 			</div>
 	</div>
 </template>
+
+
+<script setup>
+import {ref} from 'vue'
+import Modal from '../components/Modal.vue'
+
+const isShowing = ref(false)
+const cardName = ref("Janet Appleseed")
+const cardNumber = ref("0000 0000 0000 0000")
+const date = ref("00/00")
+const year = ref("")
+const cardValue = ref("000")
+const errors = ref("")
+const hide = ref(true)
+
+
+const showForm = () => {
+	let	getAllValues = {
+	cardName: cardName.value,
+	cardNumber: cardNumber.value,
+	date: date.value,
+	year: year.value,
+	cardValue: cardValue.value
+}
+
+	if(getAllValues){
+		console.log('Form submitted!!!')
+		isShowing.value = !isShowing.value
+		errors.value = "Card Details Complete";
+	}else if(!getAllValues){
+		errors.value = "Card Details Incomplete"
+		console.log("errors>>", errors.value)
+	}
+
+	if(cardName.value === ""){
+		errors.value = "Please input card name"
+	}
+	if(cardValue.value === ""){
+		errors.value = "Please input card value "
+	}
+	if(date.value === ""){
+		errors.value = "Please insert a date"
+	}
+	if(year.value === ""){
+		errors.value = "Please insert a year"
+	}
+	if(!cardNumber.value){
+		errors.value = " Please insert card Number"
+	}
+	console.log('errors', errors.value)
+}
+
+</script>
 
 <style scoped>
 .pad {
@@ -180,41 +234,3 @@
 	margin-left: 650px;
 }
 </style>
-
-<script setup>
-import {ref} from 'vue'
-import Modal from '../components/Modal.vue'
-
-const isShowing = ref(false)
-const cardName = ref("Janet Appleseed")
-const cardNumber = ref("0000 0000 0000 0000")
-const date = ref("00/00")
-const year = ref("")
-const cardValue = ref("000")
-const errors = ref([])
-
-const showForm = () => {
-	isShowing.value = !isShowing.value
-
-	if(cardName.value && cardNumber.value && date.value && year.value && cardValue.value){
-		console.log('Form submitted!!!')
-	}
-	errors.value = []
-	if(!cardName.value){
-		errors.value.push('name not valid')
-	}
-	if(!cardValue.value){
-		errors.value.push('CVC not valid')
-	}
-	if(!date.value){
-		errors.value.push('date not valid')
-	}
-	if(!year.value){
-		errors.value.push('year not valid')
-	}
-	if(!cardNumber.value){
-		errors.value.push('card Number not valid')
-	}
-	console.log('errors', errors.value)
-}
-</script>

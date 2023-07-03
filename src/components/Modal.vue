@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
- const props = defineProps(['isShowing'])
+ const props = defineProps(['isShowing']);
 </script>
 
 
